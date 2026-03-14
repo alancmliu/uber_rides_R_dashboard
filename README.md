@@ -1,11 +1,9 @@
-# uber_rides_R_dashboard
-Uber Rides Dashboard in Shiny R
-# DSCI-532_2026_32: Uber Dashboard Project
-This project develops an interactive dashboard analyzing Uber’s 2024 ride data to evaluate operational performance, revenue trends, and customer satisfaction. The dashboard provides key business insights through visual analytics, helping stakeholders understand ride volume patterns, vehicle type performance, geographic demand distribution, trip duration trends, and customer ratings.
+# Uber Rides Dashboard in Shiny R
+This project models after the [DSCI-532_2026_32: Uber Dashboard Project](https://github.com/UBC-MDS/DSCI-532_2026_32_Uber_dashboard), but with R.
 
 Built with Shiny R.
 
-## Installations
+## Steps to Run the Dashboard:
 
 1.  Clone the fork locally using:
 
@@ -33,6 +31,3 @@ The dashboard will allow you to explore Uber's 2024 ride data through interactiv
 
 ## Deployment
 The dashboard is deployed on posit cloud.
-
-## Demo
-![App Demo](img/demo.gif)
