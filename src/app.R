@@ -6,6 +6,7 @@ library(readr)
 library(lubridate)
 
 # ---------------- DATA ----------------
+# Adapted the code translated by Claude
 csv_path <- file.path("..", "data", "raw", "ncr_ride_bookings.csv")
 uber <- read_csv(csv_path, show_col_types = FALSE)
 
@@ -28,36 +29,8 @@ uber <- uber |>
     Booking_Value = as.numeric(Booking_Value)
   )
 
-# ---------------- HELPER ----------------
-human_format <- function(num) {
-  num <- as.numeric(num)
-  if (abs(num) >= 1e9) {
-    sprintf("%dB", round(num / 1e9))
-  } else if (abs(num) >= 1e6) {
-    sprintf("%dM", round(num / 1e6))
-  } else if (abs(num) >= 1e3) {
-    sprintf("%dK", round(num / 1e3))
-  } else {
-    sprintf("%d", round(num))
-  }
-}
-
+# get color palette
 set2_colors <- RColorBrewer::brewer.pal(8, "Set2")
-
-# ---------------- UI ----------------
-kpi_card <- function(icon_class, label, output_id) {
-  card(
-    div(
-      div(
-        tags$i(class = paste(icon_class, "kpi-icon")),
-        div(label),
-        class = "kpi-row"
-      ),
-      div(textOutput(output_id), class = "kpi-value")
-    ),
-    class = "kpi-card"
-  )
-}
 
 ui <- page_fluid(
   tags$link(
@@ -72,19 +45,6 @@ ui <- page_fluid(
       overflow: hidden !important;
       background: #f8f9fb;
     }
-    .kpi-card {
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-      padding: 6px;
-      text-align: center;
-      background: white;
-    }
-    .kpi-row {
-      display: flex; justify-content: center; align-items: center;
-      gap: 4px; font-size: 12px; font-weight: 600;
-    }
-    .kpi-icon  { font-size: 16px; }
-    .kpi-value { font-size: 18px; font-weight: 700; }
     .card {
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.08);
@@ -150,22 +110,6 @@ server <- function(input, output, session) {
   # ---- Reset filters ----
   observeEvent(input$action_button, {
     updateSliderInput(session,    "slider",       value = c(min(uber$Date), max(uber$Date)))
-  })
-  
-  # ---------------- KPI VALUES ----------------
-  output$total_bookings <- renderText({
-    human_format(nrow(filtered_data()))
-  })
-  
-  output$total_revenue <- renderText({
-    human_format(sum(filtered_data()$Booking_Value, na.rm = TRUE))
-  })
-  
-  output$canceled_bookings <- renderText({
-    df <- filtered_data()
-    count <- sum(df$Cancelled_Rides_by_Driver   == 1, na.rm = TRUE) +
-      sum(df$Cancelled_Rides_by_Customer == 1, na.rm = TRUE)
-    human_format(count)
   })
   
   # ---------------- CHARTS ----------------
